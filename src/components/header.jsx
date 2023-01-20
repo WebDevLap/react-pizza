@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import React, { useCallback } from "react";
 import { useSelector, useDispatch} from 'react-redux'
 import debounce from 'lodash.debounce';
@@ -24,7 +24,9 @@ function Header(){
 
     const searchInputRef = React.useRef()
     const modalWindow = useSelector((state) => state.header.modalWindow)
+
     const dispatch = useDispatch()
+    const location = useLocation()
 
     return (
             <div className="header">
@@ -38,13 +40,19 @@ function Header(){
                             </div>
                         </div>
                     </NavLink>
-                    <div className="header__search">
-                        <input ref={searchInputRef} value={headerSearchInputCopy} onChange={(e) => onSearchInputChange(e)} type="text" className="header-search__input" placeholder="Поиск пиццы..."/>
-                        <span onClick={() => {dispatch(setHeaderSearchInputCopy('')); dispatch(setHeaderSearchInput('')); searchInputRef.current.focus()}}></span>
-                    </div>
-                    <button>
-                        <NavLink className="btn" data-after-items={pizzasInCart.reduce((sum, item) => sum + item.count, 0)} data-before-price={totalPrice} to='/carts'>Корзина</NavLink>
-                    </button>
+                    {
+                        location.pathname.indexOf('/cart') === -1 && (
+                            <>
+                                <div className="header__search">
+                                    <input ref={searchInputRef} value={headerSearchInputCopy} onChange={(e) => onSearchInputChange(e)} type="text" className="header-search__input" placeholder="Поиск пиццы..."/>
+                                    <span onClick={() => {dispatch(setHeaderSearchInputCopy('')); dispatch(setHeaderSearchInput('')); searchInputRef.current.focus()}}></span>
+                                </div>
+                                <button>
+                                    <NavLink className="btn" data-after-items={pizzasInCart.reduce((sum, item) => sum + item.count, 0)} data-before-price={totalPrice} to='/carts'>Корзина</NavLink>
+                                </button>
+                            </>
+                        )
+                    }
                 </div>
             </div>
     )

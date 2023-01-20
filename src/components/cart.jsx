@@ -29,48 +29,50 @@ export default function Cart({ id, imageUrl, title, type, size, price, count }) 
   return (
     <div className="cart">
       <div className="cart__wrapper">
-        <div className="cart__img">
-          <img src={imageUrl} alt="error" />
-        </div>
-        <div className="cart__content">
-          <div className="cart__title">{title}</div>
-          <div className="cart__subtitle">
-            {type} тесто🍕 {size}см.
+        <div className="cart__first-row">
+          <div className="cart__img">
+            <img src={imageUrl} alt="error" />
+          </div>
+          <div className="cart__content">
+            <div className="cart__title">{title}</div>
+            <div className="cart__subtitle">
+              {type} тесто🍕 {size}см.
+            </div>
           </div>
         </div>
-        <div className="cart__counters">
-          <div
-            style={{ top: counterMouseEnterPos[1], left: counterMouseEnterPos[0] }}
-            className={
-              inputTextIsActive === 1 ? 'cart__mouse-enter-text active' : 'cart__mouse-enter-text'
-            }
-            ref={mouseEnterTextRef}>
-            Можно изменять с помощью ввода
+        <div className="cart__second-row">
+          <div className="cart__counters">
+            <div
+              style={{ top: counterMouseEnterPos[1], left: counterMouseEnterPos[0] }}
+              className={
+                inputTextIsActive === 1 ? 'cart__mouse-enter-text active' : 'cart__mouse-enter-text'
+              }
+              ref={mouseEnterTextRef}>
+              Можно изменять с помощью ввода
+            </div>
+            <span
+              className={count < 1 ? 'cart__counter disabled' : 'cart__counter'}
+              onClick={() => dispatch(removePizzasCount({ id, type, size }))}></span>
+            <input
+              type="text"
+              value={count}
+              onMouseLeave={() => setInputTextIsActive(0)}
+              onMouseMove={(e) => onInputMouseMove(e)}
+              onMouseEnter={() => setInputTextIsActive(1)}
+              onChange={(e) => dispatch(onCountChange({ id, type, size, value: e.target.value }))}
+            />
+            <span
+              className={count > 98 ? 'cart__counter disabled' : 'cart__counter'}
+              onClick={() => dispatch(addPizzasInCart({ id, type, size }))}></span>
           </div>
-          <span
-            className={count < 1 ? 'cart__counter disabled' : 'cart__counter'}
-            onClick={() => {
-              dispatch(removePizzasCount({ id, type, size }));
-            }}></span>
-          <input
-            type="text"
-            value={count}
-            onMouseLeave={() => setInputTextIsActive(0)}
-            onMouseMove={(e) => onInputMouseMove(e)}
-            onMouseEnter={() => setInputTextIsActive(1)}
-            onChange={(e) => dispatch(onCountChange({ id, type, size, value: e.target.value }))}
-          />
-          <span
-            className={count > 98 ? 'cart__counter disabled' : 'cart__counter'}
-            onClick={() => dispatch(addPizzasInCart({ id, type, size }))}></span>
-        </div>
-        <div className="cart__price">{price} Р</div>
-        <div
-          className="cart__remove-btn"
-          onClick={() => dispatch(removePizzasInCart({ id, type, size }))}>
-          <span></span>
-          <span></span>
-        </div>
+          <div className="cart__price">{price} Р</div>
+          <button
+            className="cart__remove-btn"
+            onClick={() => dispatch(removePizzasInCart({ id, type, size }))}>
+            <span></span>
+            <span></span>
+          </button>
+          </div>
       </div>
     </div>
   );
